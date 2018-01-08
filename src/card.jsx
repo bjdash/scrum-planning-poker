@@ -197,7 +197,7 @@ class Card extends Component{
 	render(){
 		const {value} = this.props;
 		return(
-			<span onClick={this.props.onClick}>
+			<div onClick={this.props.onClick} className="card-cont">
 				{!value && this.grey()}
 				{value==='green' && this.green()}
 				{value===1 && this.one()}
@@ -209,7 +209,7 @@ class Card extends Component{
 				{value===20 && this.twenty()}
 				{value===40 && this.fourty()}
 				{value===100 && this.hundred()}
-			</span>
+			</div>
 		)
 		
 	}

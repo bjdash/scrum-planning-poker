@@ -62,7 +62,7 @@ class App extends Component {
                 }
                 {
                     screen === 'home' && 
-                    <div className="container">
+                    <div className="">
                         <Home room={room} resetScreen={this.resetScreen}/>
                     </div>
                 }

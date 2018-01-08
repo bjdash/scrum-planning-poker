@@ -102,6 +102,14 @@ io.on('connection', function (socket) {
         }
     })
 
+    socket.on('REVEAL_CARDS',function(data){
+        if(data.roomId && ROOMS[data.roomId]){
+            io.sockets.to(data.roomId).emit('CARDS_REVEALED', {});
+        }else{
+            socket.to(data.room).emit('ERROR', 'Room does not exist.');
+        }
+    })
+
     socket.on('disconnect', function () {
         var room = ROOMS[socket.roomId], index;
         if(room){

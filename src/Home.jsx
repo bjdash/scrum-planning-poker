@@ -36,6 +36,9 @@ class Home extends Component {
         Socket.onAdminLeft((data)=>{
             this.onAdminLeft(data)
         });
+        Socket.onCardsRevealed((data)=>{
+            this.onCardsRevealed(data)
+        });
     }
     componentWillReceiveProps(props){
         //this.setState({room:props.room})
@@ -60,8 +63,15 @@ class Home extends Component {
         });
     }
 
+    _handleKeyPress(e){
+        if (e.key === 'Enter') {
+            this.setStory();
+        }
+    }
+
     revealCards(){
-        this.setState({revealed:true})
+        this.setState({revealed:true});
+        Socket.revealCards(this.state.room.id);
     }
 
     setStory(){
@@ -90,6 +100,7 @@ class Home extends Component {
             return userX.id === user? {...userX, card} : userX;
         })
         this.setState({users});
+        console.log('card selected', data);
     }
 
     onUserLeft(data){
@@ -106,82 +117,87 @@ class Home extends Component {
         ToastDanger('Admin has left the room.');
         this.props.resetScreen();
     }
+    onCardsRevealed(){
+        this.setState({revealed:true});
+    }
 
     render() {
         const {room, users, isAdmin, story, selectedCard, revealed} = this.state;
-        const myId = this.state.user.id;
+        //const myId = this.state.user.id;
         return (
-            <div className="container">
+            <div className="container-fluid">
                 <div className="roomTitle">Team: <span className="bold">{room.name}</span><span className="roomId mLeft10">({room.id})</span></div>
-                <div className="storySection">
+                <div className="container">
+                    <div className="storySection">
+                        {
+                            isAdmin &&
+                            <div className="input-group">
+                                <span className="input-group-addon story">Story: </span>
+                                <input type="text" name="story" value={story} onKeyPress={(e)=>{this._handleKeyPress(e)}} onChange={(e)=>{this.handleFormChange(e)}} className="form-control input-story" placeholder="Story..." />
+                                <span className="input-group-btn">
+                                    <button className="btn btn-primary" type="button" onClick={(e)=>{this.setStory()}}>Go!</button>
+                                </span>
+                            </div>
+                        }
+                        {
+                            !isAdmin && 
+                            <div className="story">Story: 
+                                <span className="bold mLeft10">{story}</span>
+                            </div>
+                        }
+                    </div>
+
+
                     {
-                        isAdmin &&
-                        <div className="input-group">
-                            <span className="input-group-addon">Story: </span>
-                            <input type="text" name="story" value={story} onChange={(e)=>{this.handleFormChange(e)}} className="form-control" placeholder="Story..." />
-                            <span className="input-group-btn">
-                                <button className="btn btn-primary" type="button" onClick={(e)=>{this.setStory()}}>Go!</button>
-                            </span>
-                        </div>
+                        true ? (
+                            (users && users.length>1) ? 
+                                <div className="usersList">
+                                    <label className="teamLabel">
+                                        Team members
+                                        {isAdmin && <button type="button" className="btn btn-sm btn-success mLeft10" onClick={()=>{this.revealCards()}}> Reveal all</button>}
+                                    </label>
+                                    <div className="col-xs-9">
+                                        {users/*.filter(user => user.id !== myId)*/.map((user)=>{
+                                            return (<UserCard value={user.card} revealed={revealed} key={user.id} name={user.name} />)
+                                        })}
+                                    </div>
+                                </div> 
+                                :
+                                <div className="center noUser">
+                                    <div>Invite members to join your room. Room id: <span className="bold">{room.id}</span></div>
+                                    <div>Visit <a href="https://scrum-poker-plan.herokuapp.com">https://scrum-poker-plan.herokuapp.com</a> and enter room id <span className="bold">{room.id}</span></div>
+                                </div>
+                            ): null
                     }
-                    {
-                        !isAdmin && 
-                        <div className="story">Story: 
-                            <span className="bold mLeft10">{story}</span>
+
+                    { true && 
+                        <div>
+                            <div className="col-sm-9 deck rotateHand">
+                                <Card value={1} selected={selectedCard} onClick={()=>{this.selectCard(1)}}/>
+                                <Card value={2} selected={selectedCard} onClick={()=>{this.selectCard(2)}} />
+                                <Card value={3} selected={selectedCard} onClick={()=>{this.selectCard(3)}}/>
+                                <Card value={5} selected={selectedCard} onClick={()=>{this.selectCard(5)}}/>
+                                <Card value={8} selected={selectedCard} onClick={()=>{this.selectCard(8)}}/>
+                                <Card value={13} selected={selectedCard} onClick={()=>{this.selectCard(13)}}/>
+                                <Card value={20} selected={selectedCard} onClick={()=>{this.selectCard(20)}}/>
+                                <Card value={40} selected={selectedCard} onClick={()=>{this.selectCard(40)}}/>
+                                <Card value={100} selected={selectedCard} onClick={()=>{this.selectCard(100)}}/>
+                            </div>
+                            {/*<div className="col-sm-3">
+                                <div className="fSize20 bold">Team members</div>
+                                {users.map((user)=>{
+                                    return (<div className="members" key={user.id} >
+                                        <span>{user.name}</span>
+                                        {user.id === room.admin && <span className="mLeft10">(admin)</span>}
+                                        {user.id === myId && <span className="mLeft10">(you)</span>}
+
+                                        {user.card && <span className="glyphicon glyphicon-ok pull-right"></span>}
+                                    </div>)
+                                })}
+                            </div>*/}
                         </div>
                     }
                 </div>
-
-                
-
-                {
-                    isAdmin ? (
-                        (users && users.length>1) ? 
-                            <div className="usersList">
-                                <label className="teamLabel">Team members</label>
-                                <button type="button" className="btn btn-sm btn-success mLeft10" onClick={()=>{this.revealCards()}}> Reveal all</button>
-                                <div>
-                                    {users.filter(user => user.id !== myId).map((user)=>{
-                                        return (<UserCard value={user.card} revealed={revealed} key={user.id} name={user.name} />)
-                                    })}
-                                </div>
-                            </div> 
-                            :
-                            <div className="center noUser">
-                                <div>Invite members to join your session. Session id: <span className="bold">{room.id}</span></div>
-                                <div>or</div>
-                                <div>Send them this link: </div>
-                            </div>
-                        ): null
-                }
-                { !isAdmin && 
-                    <div>
-                        <div className="col-sm-9">
-                            <Card value={1} selected={selectedCard} onClick={()=>{this.selectCard(1)}}/>
-                            <Card value={2} selected={selectedCard} onClick={()=>{this.selectCard(2)}} />
-                            <Card value={3} selected={selectedCard} onClick={()=>{this.selectCard(3)}}/>
-                            <Card value={5} selected={selectedCard} onClick={()=>{this.selectCard(5)}}/>
-                            <Card value={8} selected={selectedCard} onClick={()=>{this.selectCard(8)}}/>
-                            <Card value={13} selected={selectedCard} onClick={()=>{this.selectCard(13)}}/>
-                            <Card value={20} selected={selectedCard} onClick={()=>{this.selectCard(20)}}/>
-                            <Card value={40} selected={selectedCard} onClick={()=>{this.selectCard(40)}}/>
-                            <Card value={100} selected={selectedCard} onClick={()=>{this.selectCard(100)}}/>
-                        </div>
-                        <div className="col-sm-3">
-                            <div className="fSize20 bold">Team members</div>
-                            {users.map((user)=>{
-                                return (<div className="members" key={user.id} >
-                                    <span>{user.name}</span>
-                                    {user.id === room.admin && <span className="mLeft10">(admin)</span>}
-                                    {user.id === myId && <span className="mLeft10">(you)</span>}
-
-                                    {user.card && <span className="glyphicon glyphicon-ok pull-right"></span>}
-                                </div>)
-                            })}
-                        </div>
-                    </div>
-                }
-                
             </div>
             
         );

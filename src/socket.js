@@ -1,6 +1,7 @@
 import openSocket from 'socket.io-client';
+import {Utils} from "./utils";
 
-const  socket = openSocket('/');
+const  socket = openSocket(Utils.baseURL);
 
 const Socket = {
 	joinRoom:joinRoom,
@@ -10,7 +11,9 @@ const Socket = {
 	selectCard: selectCard,
 	onCardSelected: onCardSelected,
 	onUserLeft: onUserLeft,
-	onAdminLeft: onAdminLeft
+	onAdminLeft: onAdminLeft,
+	revealCards:revealCards,
+	onCardsRevealed: onCardsRevealed
 }
 
 function joinRoom(user){
@@ -30,7 +33,7 @@ function onStorySet(cb){
 }
 
 function selectCard(card, room, user){
-	socket.emit('SELECT_CARD', {card, room, user});	
+	socket.emit('SELECT_CARD', {card, room, user});
 }
 
 function onCardSelected(cb){
@@ -43,5 +46,13 @@ function onUserLeft(cb){
 
 function onAdminLeft(cb){
 	socket.on('ADMIN_LEFT', data => cb(data));	
+}
+
+function revealCards(roomId){
+	socket.emit('REVEAL_CARDS', {roomId});
+}
+
+function onCardsRevealed(cb){
+	socket.on('CARDS_REVEALED', data => cb(data));	
 }
 export default Socket;

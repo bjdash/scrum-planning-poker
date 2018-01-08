@@ -1,6 +1,8 @@
 export const Utils={
 	s4:s4,
-	s8:s8
+	s8:s8,
+	//baseURL: 'http://localhost:3001/',
+	baseURL: '/'
 }
 
 function s4(){
