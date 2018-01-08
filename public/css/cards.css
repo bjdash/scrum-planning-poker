@@ -1,0 +1,145 @@
+body {
+  padding: 0;
+  margin: 0;
+  background: #f0f0f0;
+}
+.cards {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.card {
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  width: 135px;
+  height: 190px;
+  font: 16px 'Trebuchet MS';
+  margin: 10px;
+  border-radius: 4px;
+  background: #fff;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+}
+.card:before,
+.card:after {
+  content: attr(value);
+  position: absolute;
+  width: 12px;
+  text-align: right;
+  letter-spacing: -2px;
+}
+.card:before {
+  top: -25px;
+  right: -10px;
+    opacity: 0.7;
+}
+.card:after {
+    display: none;
+  bottom: 4px;
+  right: 4px;
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.card--heart {
+  color: #e44145;
+}
+.roman{
+    font-size: 60px;
+}
+.card--heart:before,
+.card--heart:after {
+  /*content: attr(value) ' ♥';*/
+  content: attr(value);
+  font-size: 90px;
+  width: 125px;
+}
+.card--spade {
+  color: #252525;
+}
+.card--spade:before,
+.card--spade:after {
+  content: attr(value) ' ♠';
+}
+.card__inner {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+}
+.card__inner--centered {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.card__column {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.card__column--centered {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.card__symbol {
+  display: inline-block;
+  /*height: 40px;*/
+  text-align: center;
+}
+.card__symbol:before {
+  font-size: 40px;
+  line-height: 40px;
+}
+.card--heart .card__symbol:before {
+  content: '♥';
+}
+.card--spade .card__symbol:before {
+  content: '♠';
+}
+.card__symbol--rotated,
+.card__symbol:last-of-type {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+.card__symbol:first-of-type {
+  -webkit-transform: rotate(0);
+          transform: rotate(0);
+}
+.card__symbol--big {
+  -ms-flex-preferred-size: 60px;
+      flex-basis: 60px;
+}
+.card__symbol--huge {
+  -ms-flex-preferred-size: 108px;
+      flex-basis: 108px;
+}
+.title {
+  font: 18px 'Trebuchet MS';
+  color: #444;
+  text-align: center;
+}
+.geryCard{
+  background: linear-gradient(-45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), rgb(86, 86, 86);
+  background-size: 20px;
+}
+.greenCard{
+  background: linear-gradient(-45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), linear-gradient(45deg, rgba(0,0,0,0) 25%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 75%, rgba(255,255,255,0.2) 75%), #1B5E20;
+  background-size: 20px;
+}
