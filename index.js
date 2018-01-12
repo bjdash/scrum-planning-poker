@@ -4,12 +4,13 @@ var app = express();
 var path = require('path');
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var port = process.env.PORT || 3001;
+var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3001,
+	ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 var bodyParser = require('body-parser');
 
 var ROOMS = {}, lastRoomId = 1000;
 
-server.listen(port, function () {
+server.listen(port, ip, function () {
     console.log('Server listening at port %d', port);
 });
 
